@@ -10,9 +10,9 @@
 ## 🔍 Indicadores de Compromiso (IoCs) Iniciales
 | Tipo | Indicador | Descripción |
 | :--- | :--- | :--- |
-| **URL (Redirección)** | `https://servicio.botafopalmeiras.com/activacion/cuenta-hiqi/` | Enlace inicial incrustado en el cuerpo del correo. |
-| **URL (Payload)** | `https://iniciosociedad.aatmaiv.com/1776189058/[...]` | Destino final tras la redirección (Página falsa de recolección de credenciales). |
-| **IPv4** | `143.95.108.238` | IP asociada a la infraestructura web maliciosa. |
+| **URL (Redirección)** | `hxxps://servicio.botafopalmeiras[.]com/activacion/cuenta-hiqi/` | Enlace inicial incrustado en el cuerpo del correo. |
+| **URL (Payload)** | `hxxps://iniciosociedad.aatmaiv[.]com/1776189058/[...]` | Destino final tras la redirección (Página falsa de recolección de credenciales). |
+| **IPv4** | `143[.]95[.]108[.]238` | IP asociada a la infraestructura web maliciosa. |
 
 ---
 
@@ -21,15 +21,15 @@
 Como primer paso de la investigación, se solicitó al usuario el correo original en formato `.eml` para extraer las cabeceras y realizar el trazado de la ruta del mensaje evadiendo las técnicas de ofuscación visual.
 
 **Hallazgos Técnicos:**
-* **IP de Origen Real (X-Originating-IP):** Se identificó que la IP real desde donde se originó el ataque es `85.203.15.22`, saltándose la IP falsificada mostrada en el cliente de correo del usuario.
-* **Técnica de Ingeniería Social (Look-alike domain):** Mientras la empresa legítima opera bajo el dominio `lexdata-abogados.cl`, el atacante utilizó el remitente malicioso `soporte@lexdata-admin-update.com` (Typosquatting) para generar falsa confianza.
+* **IP de Origen Real (X-Originating-IP):** Se identificó que la IP real desde donde se originó el ataque es `85[.]203[.]15[.]22`, saltándose la IP falsificada mostrada en el cliente de correo del usuario.
+* **Técnica de Ingeniería Social (Look-alike domain):** Mientras la empresa legítima opera bajo el dominio `empresa-ejemplo[.]cl`, el atacante utilizó el remitente malicioso `empresa-ejemplo-update[.]com` (Typosquatting) para generar falsa confianza.
 * **Fallo en Autenticación (SPF/DMARC):** El análisis de seguridad arrojó un resultado `spf=softfail` y `dmarc=fail`. Esto confirma de manera concluyente que la dirección IP emisora no estaba autorizada para enviar correos en nombre de dicho dominio, confirmando la naturaleza fraudulenta del mensaje (Email Spoofing).
 
 ---
 
 ## 🌍 Fase 2: Triaje de Infraestructura (OSINT y CTI)
 
-Se procedió a investigar la infraestructura del atacante mediante el análisis de la dirección IP sospechosa (`143.95.108.238`) utilizando plataformas de Cyber Threat Intelligence (CTI).
+Se procedió a investigar la infraestructura del atacante mediante el análisis de la dirección IP sospechosa (`143[.]95[.]108[.]238`) utilizando plataformas de Cyber Threat Intelligence (CTI).
 
 ### 2.1 Análisis de Reputación (Cisco Talos)
 Se consultó la base de datos de Talos Intelligence para evaluar la reputación e historial de la IP objetivo.
@@ -57,7 +57,7 @@ Para entender la naturaleza del servidor utilizado, se realizó un escaneo pasiv
 Basado en la confirmación de la infraestructura maliciosa, se activó el protocolo de respuesta a incidentes, estableciendo las siguientes acciones inmediatas y preventivas:
 
 **1. Medidas de Contención Inmediata:**
-* **Bloqueo Perimetral:** Incorporación de la IP (`143.95.108.238`) y los dominios identificados (`servicio.botafopalmeiras.com` e `iniciosociedad.aatmaiv.com`) a las listas negras del Firewall corporativo, proxy web y filtro DNS.
+* **Bloqueo Perimetral:** Incorporación de la IP (`143[.]95[.]108[.]238`) y los dominios identificados (`servicio.botafopalmeiras[.]com` e `iniciosociedad.aatmaiv[.]com`) a las listas negras del Firewall corporativo, proxy web y filtro DNS.
 * **Purga de Correo (Search and Destroy):** Ejecución de una búsqueda global en el tenant de Microsoft 365 para identificar y eliminar el correo malicioso de todas las bandejas de entrada de la organización.
 * **Protección de Identidad:** Rotación forzada de contraseñas para el usuario afectado y revocación inmediata de los tokens de sesión activos para expulsar cualquier posible acceso no autorizado.
 
@@ -71,6 +71,7 @@ Basado en la confirmación de la infraestructura maliciosa, se activó el protoc
 * **Implementación de MFA:** Exigir Autenticación Multifactor (MFA) obligatoria para todos los accesos a Microsoft 365 y VPN, mitigando el impacto en caso de robo de credenciales.
 * **Security Awareness (Concientización):** Diseñar una campaña de capacitación para los empleados utilizando este incidente (anonimizado) como caso de estudio práctico, enfocándose en la identificación de dominios Look-alike y la verificación de remitentes.
 
+*Nota: Caso de análisis educativo/simulado basado en un correo real, con datos de la organización anonimizados.*
 ---
 **Analista a cargo:** Franco Aravena
 **Estado del Incidente:** Cerrado / Contenido
